@@ -9,8 +9,12 @@ public class AudioManager : MonoBehaviour
 
     AudioSource _audioSource;
 
+    bool _songIsPlaying;
+
     private void Awake()
     {
+        _songIsPlaying = false;
+
         #region Singleton Pattern
         if (Instance == null)
         {
@@ -29,7 +33,11 @@ public class AudioManager : MonoBehaviour
 
     public void PlaySong(AudioClip clip)
     {
-        _audioSource.clip = clip;
-        _audioSource.Play();
+        if (!_songIsPlaying)
+        {
+            _audioSource.clip = clip;
+            _audioSource.Play();
+            _songIsPlaying = true;
+        }
     }
 }

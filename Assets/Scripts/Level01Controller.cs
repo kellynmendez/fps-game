@@ -7,22 +7,29 @@ using UnityEngine.UI;
 public class Level01Controller : MonoBehaviour
 {
     [SerializeField] Text _currentScoreTextView;
+    [SerializeField] UIManager _uiManager;
     int _currentScore;
+    int _scoreIncr = 5;
     string _highScoreVar = "HighScore";
+
+    bool _pause = false;
+    bool _playerIsDead = false;
 
     void Update()
     {
+        // Checking if player is dead
+        _playerIsDead = _uiManager.IsPlayerDead();
+
         if (Input.GetKeyDown(KeyCode.Q))
         {
-            IncreaseScore(5);
+            IncreaseScore(_scoreIncr);
         }
-        if (Input.GetKeyDown(KeyCode.Backspace))
+        if (!_playerIsDead && Input.GetKeyDown(KeyCode.Escape))
         {
-            ReloadLevel();
-        }
-        if (Input.GetKeyDown(KeyCode.Escape))
-        {
-            ExitLevel();
+            _pause = true;
+            Cursor.lockState = CursorLockMode.None;
+            _uiManager.PauseGame();
+            Time.timeScale = 0;
         }
     }
 
@@ -34,10 +41,41 @@ public class Level01Controller : MonoBehaviour
         _currentScoreTextView.text = "Score: " + _currentScore.ToString();
     }
 
-    void ReloadLevel()
+    public void ResumeGame()
     {
+        _uiManager.PlayGame();
+        Time.timeScale = 1;
+
+        if (_pause)
+        {
+            _pause = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
+    }
+
+    public void ReloadLevel()
+    {
+        if (!_pause)
+        {
+            // if you died and are restarting the level, save score
+            int highScore = PlayerPrefs.GetInt(_highScoreVar);
+            if (_currentScore > highScore)
+            {
+                // save current score as new high score
+                PlayerPrefs.SetInt(_highScoreVar, _currentScore);
+                Debug.Log("New high score: " + _currentScore);
+            }
+        }
+
         int activeSceneIndex = SceneManager.GetActiveScene().buildIndex;
         SceneManager.LoadScene(activeSceneIndex);
+        Time.timeScale = 1;
+
+        if (_pause)
+        {
+            _pause = false;
+            Cursor.lockState = CursorLockMode.Locked;
+        }
     }
 
     public void ExitLevel()
@@ -49,6 +87,14 @@ public class Level01Controller : MonoBehaviour
             // save current score as new high score
             PlayerPrefs.SetInt(_highScoreVar, _currentScore);
             Debug.Log("New high score: " + _currentScore);
+        }
+        Cursor.lockState = CursorLockMode.None;
+
+        // if from pause
+        Time.timeScale = 1;
+        if (_pause)
+        {
+            _pause = false;
         }
 
         // load new level
