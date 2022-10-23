@@ -12,14 +12,15 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] float _groundDistance = 0.4f;
     [SerializeField] float _jumpHeight = 3f;
     [SerializeField] LayerMask _groundMask;
-    [SerializeField] UIManager _uiManager;
 
+    private UIManager _uiManager;
     Vector3 _velocity;
     bool _isGrounded;
     float _currentSpeed;
 
     private void Awake()
     {
+        _uiManager = FindObjectOfType<UIManager>();
         _currentSpeed = _normalSpeed;
     }
 

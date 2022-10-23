@@ -4,13 +4,14 @@ using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
-    [SerializeField] UIManager _uiManager;
+    private UIManager _uiManager;
     int _healthEKeyDecr = 5;
     int _healthMax = 100;
     bool _playerIsDead = false;
 
     private void Awake()
     {
+        _uiManager = FindObjectOfType<UIManager>();
         SetHealthToMax();
     }
 

@@ -6,9 +6,14 @@ public class CameraLook : MonoBehaviour
 {
     [SerializeField] float _mouseSensitivity = 100f;
     [SerializeField] Transform _playerBody;
-    [SerializeField] UIManager _uiManager;
+    private UIManager _uiManager;
 
     float _xRotation = 0f;
+
+    private void Awake()
+    {
+        _uiManager = FindObjectOfType<UIManager>();
+    }
 
     // Start is called before the first frame update
     void Start()
