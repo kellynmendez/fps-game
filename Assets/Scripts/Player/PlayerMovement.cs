@@ -29,24 +29,12 @@ public class PlayerMovement : MonoBehaviour
     {
         if (!_uiManager.IsPlayerDead())
         {
-            // Moving player
-            float x = Input.GetAxis("Horizontal");
-            float z = Input.GetAxis("Vertical");
-            Vector3 move = transform.right * x + transform.forward * z;
-            _charController.Move(move * _currentSpeed * Time.deltaTime);
-            // Checking if player is grounded so we can reset velocity
-            _isGrounded = Physics.CheckSphere(_groundCheck.position, _groundDistance, _groundMask);
-            if (_isGrounded && _velocity.y < 0)
-            {
-                _velocity.y = -2f;
-            }
-            // Adding gravity
-            _velocity.y += gravity * Time.deltaTime;
-            _charController.Move(_velocity * Time.deltaTime);
+            // Player movement
+            PlayerMove();
             // Jump
             if (Input.GetKeyDown(KeyCode.Space) && _isGrounded)
             {
-                _velocity.y = Mathf.Sqrt(_jumpHeight * -2f * gravity);
+                Jump();
             }
             // Sprint
             if (Input.GetKeyDown(KeyCode.LeftShift))
@@ -58,5 +46,28 @@ public class PlayerMovement : MonoBehaviour
                 _currentSpeed = _normalSpeed;
             }
         }
+    }
+
+    void PlayerMove()
+    {
+        // Moving player
+        float x = Input.GetAxis("Horizontal");
+        float z = Input.GetAxis("Vertical");
+        Vector3 move = transform.right * x + transform.forward * z;
+        _charController.Move(move * _currentSpeed * Time.deltaTime);
+        // Checking if player is grounded so we can reset velocity
+        _isGrounded = Physics.CheckSphere(_groundCheck.position, _groundDistance, _groundMask);
+        if (_isGrounded && _velocity.y < 0)
+        {
+            _velocity.y = -2f;
+        }
+        // Adding gravity
+        _velocity.y += gravity * Time.deltaTime;
+        _charController.Move(_velocity * Time.deltaTime);
+    }
+
+    void Jump()
+    {
+        _velocity.y = Mathf.Sqrt(_jumpHeight * -2f * gravity);
     }
 }
