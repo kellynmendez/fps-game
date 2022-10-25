@@ -106,15 +106,15 @@ NavMeshSettings:
   m_BuildSettings:
     serializedVersion: 2
     agentTypeID: 0
-    agentRadius: 1
+    agentRadius: 3
     agentHeight: 2
-    agentSlope: 45
+    agentSlope: 25
     agentClimb: 1
     ledgeDropHeight: 0
     maxJumpAcrossDistance: 3
     minRegionArea: 2
     manualCellSize: 0
-    cellSize: 0.33333334
+    cellSize: 1
     manualTileSize: 0
     tileSize: 256
     accuratePlacement: 0
@@ -1087,7 +1087,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 558177762}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: -1.4, y: 1.5, z: -37.7}
+  m_LocalPosition: {x: -1.4, y: 1.37, z: -37.7}
   m_LocalScale: {x: 4.643686, y: 1, z: 3.0173326}
   m_ConstrainProportionsScale: 0
   m_Children: []
@@ -1283,13 +1283,13 @@ Light:
   m_Type: 1
   m_Shape: 0
   m_Color: {r: 1, g: 0.9409419, b: 0.7798742, a: 1}
-  m_Intensity: 0.7
+  m_Intensity: 0.8
   m_Range: 10
   m_SpotAngle: 30
   m_InnerSpotAngle: 21.80208
   m_CookieSize: 10
   m_Shadows:
-    m_Type: 0
+    m_Type: 2
     m_Resolution: -1
     m_CustomResolution: -1
     m_Strength: 1

@@ -11,10 +11,15 @@ public class DestroyBullet : MonoBehaviour
     private float _scaleAmount = 0.98f;
     // Starting scale
     Vector3 _startScale;
+    // Player health object
+    PlayerHealth _playerHealth;
+    // Health decrease for this bullet
+    [SerializeField] int _damageAmount = 5;
 
     private void Awake()
     {
         _startScale = gameObject.transform.localScale;
+        _playerHealth = FindObjectOfType<PlayerHealth>();
     }
 
     private void OnEnable()
@@ -42,10 +47,17 @@ public class DestroyBullet : MonoBehaviour
     {
         if (other.tag != "EnemyBody")
         {
-            Debug.Log("set bullet inactive");
+            Debug.Log("set bullet inactive + " + other.gameObject.name);
             gameObject.transform.localScale = _startScale;
             gameObject.SetActive(false);
             // TODO add FX
+
+            // If this is the player, decrease player health
+            if (other.tag == "Player")
+            {
+                Debug.Log("Player health decrease by " + _damageAmount);
+                _playerHealth.DamagePlayer(_damageAmount);
+            }
         }
         
     }

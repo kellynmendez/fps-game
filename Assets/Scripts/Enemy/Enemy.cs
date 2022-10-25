@@ -5,8 +5,8 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
-    // Starting default health
-    [SerializeField] float _defaultHealth = 3f;
+    #region serialized variables
+    [Header("AI")]
     // How far the random position will be from current position
     [SerializeField] float _randPosRange = 8f;
     // Distance enemy will spot the player
@@ -15,21 +15,30 @@ public class Enemy : MonoBehaviour
     [SerializeField] float _stopDistance = 6f;
     // How much time enemy waits before changing direcitons in roam
     [SerializeField] float _waitRoamTime = 3f;
+    [Header("Health")]
+    // Starting default health
+    [SerializeField] float _defaultHealth = 3f;
+    [Header("Bullets")]
     // Velocity of bullet
     [SerializeField] float _velocity = 20f;
     // Bullet pooling object
     [SerializeField] BulletPool _bulletPool;
+    [Header("Player Score")]
+    // Score increase for injuring enemy
+    [SerializeField] int _enemyInjured = 5;
+    // Score increase for killing enemy
+    [SerializeField] int _enemyKilled = 20;
+    #endregion
 
+    #region private variables
     // Target's transform
     private Transform _target;
     // Enemy navmesh
-    NavMeshAgent _agent;
+    private NavMeshAgent _agent;
     // enemy state
-    EnemyState _state;
-    // timer so we update tracking a little less
-    private float _timeStamp = 0f;
-    // how often do we want to track
-    private float _timeOffset = 0.2f; // doing it every 0.2 seconds
+    private EnemyState _state;
+    // Score manager
+    private ScoreManager _scoreManager;
     // Timer for shooting player
     private float _shootTimeStamp = 0f;
     // how often do we want to shoot
@@ -43,8 +52,7 @@ public class Enemy : MonoBehaviour
     // Edges of plane
     float _planeX = 80f;
     float _planeZ = 80f;
-    // shoot distance offset from camera
-    float _shootOffset = 1.5f;
+    #endregion
 
     public enum EnemyState
     {
@@ -56,6 +64,7 @@ public class Enemy : MonoBehaviour
     {
         _target = FindObjectOfType<PlayerMovement>().transform;
         _agent = GetComponent<NavMeshAgent>();
+        _scoreManager = FindObjectOfType<ScoreManager>();
         _health = _defaultHealth;
         _state = EnemyState.Roam;
     }
@@ -91,14 +100,12 @@ public class Enemy : MonoBehaviour
                 if (distAway <= 1)
                 {
                     _roamReached = true;
-                    Debug.Log("waiting");
                 }
             }
         }
         // Enemy is attacking
         else
         {
-            Debug.Log($"{gameObject.name} seeking player");
             _agent.SetDestination(_target.position);
             transform.LookAt(_target.position);
         }
@@ -107,13 +114,16 @@ public class Enemy : MonoBehaviour
     public void TakeDamage(float damageAmount)
     {
         _health -= damageAmount;
-        Debug.Log($"Enemy health is now {_health}");
 
         if (_health == 0)
         {
-            Debug.Log("Enemy has died!");
+            _scoreManager.IncreaseScore(_enemyKilled);
             gameObject.SetActive(false);
             _health = _defaultHealth;
+        }
+        else
+        {
+            _scoreManager.IncreaseScore(_enemyInjured);
         }
     }
 
@@ -167,7 +177,6 @@ public class Enemy : MonoBehaviour
         {
             // Stop the enemy
             _agent.isStopped = true;
-            Debug.Log("Player is within range");
         }
         // If the enemy has stopped but the player has moved
         else if (_agent.isStopped && distanceAway > _stopDistance)
