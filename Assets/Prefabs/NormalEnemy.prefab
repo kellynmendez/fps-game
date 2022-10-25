@@ -244,6 +244,7 @@ GameObject:
   - component: {fileID: 3850189024372694492}
   - component: {fileID: 3850189024372694466}
   - component: {fileID: 3850189024372694465}
+  - component: {fileID: 1227891074328563079}
   m_Layer: 7
   m_Name: NormalEnemy
   m_TagString: Untagged
@@ -320,7 +321,7 @@ NavMeshAgent:
   m_Enabled: 1
   m_AgentTypeID: 0
   m_Radius: 2.3
-  m_Speed: 8
+  m_Speed: 14
   m_Acceleration: 10
   avoidancePriority: 99
   m_AngularSpeed: 120
@@ -346,10 +347,24 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _defaultHealth: 3
   _randPosRange: 20
-  _rangeOfAwareness: 80
-  _stopDistance: 30
-  _waitTime: 10
+  _rangeOfAwareness: 60
+  _stopDistance: 20
+  _waitRoamTime: 3
+  _velocity: 20
   _bulletPool: {fileID: 5597363678267448788}
+--- !u!65 &1227891074328563079
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3850189024372694464}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Size: {x: 1.77, y: 2.67, z: 2.74}
+  m_Center: {x: 0, y: 1.5, z: 0.19}
 --- !u!1 &4215830589359750063
 GameObject:
   m_ObjectHideFlags: 0

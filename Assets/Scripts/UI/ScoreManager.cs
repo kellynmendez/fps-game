@@ -7,13 +7,7 @@ using UnityEngine.UI;
 public class ScoreManager : MonoBehaviour
 {
     [SerializeField] Text _currentScoreTextView;
-    private UIManager _uiManager;
     int _currentScore;
-
-    private void Awake()
-    {
-        _uiManager = FindObjectOfType<UIManager>();
-    }
 
     public void IncreaseScore(int scoreIncrease)
     {

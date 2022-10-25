@@ -7,7 +7,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] CharacterController _charController;
     [SerializeField] Transform _groundCheck;
     [SerializeField] float _normalSpeed = 8f;
-    [SerializeField] float _sprintSpeed = 18f;
+    [SerializeField] float _sprintSpeed = 25f;
     [SerializeField] float gravity = -9.81f;
     [SerializeField] float _groundDistance = 0.4f;
     [SerializeField] float _jumpHeight = 3f;

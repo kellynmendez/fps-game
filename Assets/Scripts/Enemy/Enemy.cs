@@ -14,7 +14,9 @@ public class Enemy : MonoBehaviour
     // Distance enemy will stop from the player
     [SerializeField] float _stopDistance = 6f;
     // How much time enemy waits before changing direcitons in roam
-    [SerializeField] float _waitTime = 3f;
+    [SerializeField] float _waitRoamTime = 3f;
+    // Velocity of bullet
+    [SerializeField] float _velocity = 20f;
     // Bullet pooling object
     [SerializeField] BulletPool _bulletPool;
 
@@ -28,6 +30,10 @@ public class Enemy : MonoBehaviour
     private float _timeStamp = 0f;
     // how often do we want to track
     private float _timeOffset = 0.2f; // doing it every 0.2 seconds
+    // Timer for shooting player
+    private float _shootTimeStamp = 0f;
+    // how often do we want to shoot
+    private float _shootInterval = 1f;
     // enemy health
     private float _health;
     //roamed to random position, time to change
@@ -92,12 +98,9 @@ public class Enemy : MonoBehaviour
         // Enemy is attacking
         else
         {
-            if (Time.time >= _timeStamp + _timeOffset)
-            {
-                Debug.Log($"{gameObject.name} seeking player");
-                _agent.SetDestination(_target.position);
-                _timeStamp = Time.time;
-            }
+            Debug.Log($"{gameObject.name} seeking player");
+            _agent.SetDestination(_target.position);
+            transform.LookAt(_target.position);
         }
     }
 
@@ -150,13 +153,21 @@ public class Enemy : MonoBehaviour
             _roamReached = false;
         }
 
+        if (_agent.isStopped && distanceAway < _stopDistance)
+        {
+            if (Time.time >= _shootTimeStamp + _shootInterval)
+            {
+                StartCoroutine(ShootAtPlayer());
+                _shootTimeStamp = Time.time;
+            }
+        }
+
         // If enemy is moving and has reached range from player
         if (!_agent.isStopped && distanceAway < _stopDistance)
         {
             // Stop the enemy
             _agent.isStopped = true;
             Debug.Log("Player is within range");
-            StartCoroutine(LerpBulletToPlayer());
         }
         // If the enemy has stopped but the player has moved
         else if (_agent.isStopped && distanceAway > _stopDistance)
@@ -166,26 +177,22 @@ public class Enemy : MonoBehaviour
         }
     }
 
-    private IEnumerator LerpBulletToPlayer()
+    private IEnumerator ShootAtPlayer()
     {
+        // Wait for look time
         yield return new WaitForSeconds(0.5f);
         transform.LookAt(_target.position);
-        bool reachedGoal = false;
+        // Getting bullet form pool
         GameObject poolGO = _bulletPool.GetPooledObject();
-        Vector3 shotTarget = _target.position;
-        shotTarget.y += _shootOffset;
-        // Use the distance between the start and end to determine how long to lerp for.
-        float dist = Vector3.Distance(poolGO.transform.position, shotTarget);
-        float duration = dist;
-        float elapsedTime = 0;
-        while (!reachedGoal)
+        // Shoot bullet at player
+        if (poolGO)
         {
-            elapsedTime += Time.deltaTime;
-            float percentComplete = elapsedTime / duration;
-            poolGO.transform.position = Vector3.Lerp(poolGO.transform.position,
-                                 shotTarget,
-                                 percentComplete);
-            yield return null;
+            // Got an object from the pooling system, can use it
+            Rigidbody rb = poolGO.GetComponent<Rigidbody>();
+            if (rb)
+            {
+                rb.velocity = poolGO.transform.forward * _velocity;
+            }
         }
     }
 }
