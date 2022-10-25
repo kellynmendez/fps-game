@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class EnemyPool : MonoBehaviour
+public class BulletPool : MonoBehaviour
 {
     // The game object that the pool will hold
     [SerializeField] GameObject _poolObject;
@@ -10,9 +10,6 @@ public class EnemyPool : MonoBehaviour
     [SerializeField] int _poolSize = 20;
     // Make a list of game objects we want to start with
     List<GameObject> _gameObjects = new List<GameObject>();
-    // Spawn times
-    [SerializeField] float _spawnTime = 1f;
-    [SerializeField] float _spawnDelay = 3f;
 
     void Start()
     {
@@ -28,8 +25,6 @@ public class EnemyPool : MonoBehaviour
             _gameObjects.Add(newObj);
         }
 
-        // Repeatedly spawn enemy
-        InvokeRepeating(nameof(GetPooledObject), _spawnTime, _spawnDelay);
     }
 
     public GameObject GetPooledObject()
