@@ -266,8 +266,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _charController: {fileID: 7031145499331866678}
   _groundCheck: {fileID: 7031145500107393615}
-  _normalSpeed: 5
-  _sprintSpeed: 12
+  _normalSpeed: 10
+  _sprintSpeed: 20
   gravity: -19.62
   _groundDistance: 0.4
   _jumpHeight: 3
@@ -286,6 +286,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fdb7699c671f2ec45ba889b9c4f14155, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  _healthMax: 200
 --- !u!114 &2105956275502473674
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -331,7 +332,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7031145500104350625}
   m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
-  m_LocalPosition: {x: 0, y: 5.09, z: 0}
+  m_LocalPosition: {x: 0, y: 5.54, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:

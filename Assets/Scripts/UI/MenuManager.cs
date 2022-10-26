@@ -74,9 +74,13 @@ public class MenuManager : MonoBehaviour
     public void ExitLevel()
     {
         // New high score if current score is higher than high score
-        SaveHighScoreIfEligible();
+        //   and exiting after finishing game (not from pause)
+        if (!_pause)
+        {
+            SaveHighScoreIfEligible();
+        }
+        // Lock cursor
         Cursor.lockState = CursorLockMode.None;
-
         // Unfreeze the screen
         Time.timeScale = 1;
         // Unpause if paused

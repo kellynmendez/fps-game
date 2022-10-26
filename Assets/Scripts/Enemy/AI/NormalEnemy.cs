@@ -8,16 +8,16 @@ public class NormalEnemy : MonoBehaviour
     #region serialized variables
     [Header("AI")]
     // How far the random position will be from current position
-    [SerializeField] float _randPosRange = 8f;
+    [SerializeField] float _randPosRange = 30f;
     // Distance enemy will spot the player
-    [SerializeField] float _rangeOfAwareness = 15f;
+    [SerializeField] float _rangeOfAwareness = 70f;
     // Distance enemy will stop from the player
-    [SerializeField] float _stopDistance = 6f;
+    [SerializeField] float _stopDistance = 30f;
     // How much time enemy waits before changing direcitons in roam
-    [SerializeField] float _waitRoamTime = 1f;
+    [SerializeField] float _waitRoamTime = 3f;
     [Header("Bullets")]
     // Velocity of bullet
-    [SerializeField] float _velocity = 20f;
+    [SerializeField] float _velocity = 25f;
     // Bullet pooling object
     [SerializeField] BulletPool _bulletPool;
     #endregion
@@ -29,6 +29,8 @@ public class NormalEnemy : MonoBehaviour
     private NavMeshAgent _agent;
     // enemy state
     private EnemyState _state;
+    // enemy health
+    private EnemyHealth _enemyHealth;
     // Timer for shooting player
     private float _shootTimeStamp = 0f;
     // how often do we want to shoot
@@ -42,6 +44,8 @@ public class NormalEnemy : MonoBehaviour
     float _planeZ = 80f;
     // enemy is waiting
     bool _isWaiting = false;
+    // enemy has been hit
+    bool _enemyHit = false;
     #endregion
 
     public enum EnemyState
@@ -54,6 +58,7 @@ public class NormalEnemy : MonoBehaviour
     {
         _target = FindObjectOfType<PlayerMovement>().transform;
         _agent = GetComponent<NavMeshAgent>();
+        _enemyHealth = GetComponent<EnemyHealth>();
         _state = EnemyState.Roam;
     }
 
@@ -66,6 +71,7 @@ public class NormalEnemy : MonoBehaviour
     private void Update()
     {
         DetectPlayer();
+        _enemyHit = _enemyHealth.WasEnemyHit();
 
         // Enemy is roaming (not within range)
         if (_state == EnemyState.Roam)
@@ -94,7 +100,6 @@ public class NormalEnemy : MonoBehaviour
         else
         {
             _agent.SetDestination(_target.position);
-            transform.LookAt(_target.position);
         }
     }
 
@@ -134,7 +139,8 @@ public class NormalEnemy : MonoBehaviour
             _roamReached = false;
         }
 
-        if (_agent.isStopped && distanceAway < _stopDistance)
+        // If ebemy is in shooting range
+        if (_agent.isStopped && distanceAway < _stopDistance && !_enemyHit)
         {
             if (Time.time >= _shootTimeStamp + _shootInterval)
             {
@@ -180,6 +186,7 @@ public class NormalEnemy : MonoBehaviour
             Rigidbody rb = poolGO.GetComponent<Rigidbody>();
             if (rb)
             {
+                poolGO.transform.LookAt(_target.position);
                 rb.velocity = poolGO.transform.forward * _velocity;
             }
         }

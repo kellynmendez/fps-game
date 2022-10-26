@@ -36,7 +36,13 @@ public class PlayerShoot : MonoBehaviour
         {
             Debug.Log("<color=green>HIT:</color> You hit the enemy.");
             EnemyHealth enemy = rayHitInfo.transform.gameObject.GetComponent<EnemyHealth>();
-            enemy?.TakeDamage(_weaponDamage);
+            if (enemy)
+            {
+                enemy.TakeDamage(_weaponDamage);
+                enemy.EnemyKnockback(gameObject.transform.forward);
+            }
+            
+
         }
         else
         {
