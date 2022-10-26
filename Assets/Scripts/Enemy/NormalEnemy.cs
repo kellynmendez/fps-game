@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.AI;
 
-public class Enemy : MonoBehaviour
+public class NormalEnemy : MonoBehaviour
 {
     #region serialized variables
     [Header("AI")]
@@ -14,20 +14,12 @@ public class Enemy : MonoBehaviour
     // Distance enemy will stop from the player
     [SerializeField] float _stopDistance = 6f;
     // How much time enemy waits before changing direcitons in roam
-    [SerializeField] float _waitRoamTime = 3f;
-    [Header("Health")]
-    // Starting default health
-    [SerializeField] float _defaultHealth = 3f;
+    [SerializeField] float _waitRoamTime = 1f;
     [Header("Bullets")]
     // Velocity of bullet
     [SerializeField] float _velocity = 20f;
     // Bullet pooling object
     [SerializeField] BulletPool _bulletPool;
-    [Header("Player Score")]
-    // Score increase for injuring enemy
-    [SerializeField] int _enemyInjured = 5;
-    // Score increase for killing enemy
-    [SerializeField] int _enemyKilled = 20;
     #endregion
 
     #region private variables
@@ -37,14 +29,10 @@ public class Enemy : MonoBehaviour
     private NavMeshAgent _agent;
     // enemy state
     private EnemyState _state;
-    // Score manager
-    private ScoreManager _scoreManager;
     // Timer for shooting player
     private float _shootTimeStamp = 0f;
     // how often do we want to shoot
     private float _shootInterval = 1f;
-    // enemy health
-    private float _health;
     //roamed to random position, time to change
     bool _roamReached = false;
     // Random position to roam to
@@ -52,6 +40,8 @@ public class Enemy : MonoBehaviour
     // Edges of plane
     float _planeX = 80f;
     float _planeZ = 80f;
+    // enemy is waiting
+    bool _isWaiting = false;
     #endregion
 
     public enum EnemyState
@@ -64,8 +54,6 @@ public class Enemy : MonoBehaviour
     {
         _target = FindObjectOfType<PlayerMovement>().transform;
         _agent = GetComponent<NavMeshAgent>();
-        _scoreManager = FindObjectOfType<ScoreManager>();
-        _health = _defaultHealth;
         _state = EnemyState.Roam;
     }
 
@@ -82,7 +70,7 @@ public class Enemy : MonoBehaviour
         // Enemy is roaming (not within range)
         if (_state == EnemyState.Roam)
         {
-            if (_roamReached)
+            if (_roamReached && !_isWaiting)
             {
                 // Setting desination
                 _randPosition = RandomPosition();
@@ -92,14 +80,13 @@ public class Enemy : MonoBehaviour
             else
             {
                 // Checking if reached destination
-                Vector3 currPos = new Vector3(
-                    transform.position.x,
-                    0,
-                    transform.position.z);
+                Vector3 currPos = new Vector3(transform.position.x, 0, transform.position.z);
                 float distAway = Vector3.Distance(currPos, _randPosition);
-                if (distAway <= 1)
+                if (distAway <= 0.1 && !_roamReached)
                 {
                     _roamReached = true;
+                    // Have enemy wait before moving to next random position
+                    StartCoroutine(Wait());
                 }
             }
         }
@@ -108,22 +95,6 @@ public class Enemy : MonoBehaviour
         {
             _agent.SetDestination(_target.position);
             transform.LookAt(_target.position);
-        }
-    }
-
-    public void TakeDamage(float damageAmount)
-    {
-        _health -= damageAmount;
-
-        if (_health == 0)
-        {
-            _scoreManager.IncreaseScore(_enemyKilled);
-            gameObject.SetActive(false);
-            _health = _defaultHealth;
-        }
-        else
-        {
-            _scoreManager.IncreaseScore(_enemyInjured);
         }
     }
 
@@ -184,6 +155,15 @@ public class Enemy : MonoBehaviour
             // Let the enemy move
             _agent.isStopped = false;
         }
+    }
+
+    private IEnumerator Wait()
+    {
+        _isWaiting = true;
+        _agent.isStopped = true;
+        yield return new WaitForSeconds(_waitRoamTime);
+        _isWaiting = false;
+        _agent.isStopped = false;
     }
 
     private IEnumerator ShootAtPlayer()

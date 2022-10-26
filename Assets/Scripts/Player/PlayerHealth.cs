@@ -5,7 +5,7 @@ using UnityEngine;
 public class PlayerHealth : MonoBehaviour
 {
     private UIManager _uiManager;
-    int _healthMax = 100;
+    [SerializeField] int _healthMax = 200;
 
     private void Awake()
     {

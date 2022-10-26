@@ -35,7 +35,7 @@ public class PlayerShoot : MonoBehaviour
         if (Physics.Raycast(_cameraController.transform.position, rayDirection, out rayHitInfo, _rayDistance, _hitLayer))
         {
             Debug.Log("<color=green>HIT:</color> You hit the enemy.");
-            Enemy enemy = rayHitInfo.transform.gameObject.GetComponent<Enemy>();
+            EnemyHealth enemy = rayHitInfo.transform.gameObject.GetComponent<EnemyHealth>();
             enemy?.TakeDamage(_weaponDamage);
         }
         else
