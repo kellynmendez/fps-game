@@ -27,6 +27,8 @@ public class LargeEnemy : MonoBehaviour
     private float _shootTimeStamp = 0f;
     // how often do we want to shoot
     private float _shootInterval = 1f;
+    // y offset from player position to target
+    private float _offsetY = 5f;
     #endregion
 
     public enum EnemyState
@@ -52,7 +54,7 @@ public class LargeEnemy : MonoBehaviour
         _agent.SetDestination(_target.position);
         transform.LookAt(_target.position);
         Vector3 tar = _target.position;
-        tar.y += 5;
+        tar.y += _offsetY;
         _barrel.transform.LookAt(tar);
         _barrel.transform.Rotate(90, 0, 0, Space.Self);
 
@@ -97,7 +99,7 @@ public class LargeEnemy : MonoBehaviour
             if (rb)
             {
                 Vector3 tar = _target.position;
-                tar.y += 5;
+                tar.y += _offsetY;
                 poolGO.transform.LookAt(tar);
                 rb.velocity = poolGO.transform.forward * _velocity;
             }

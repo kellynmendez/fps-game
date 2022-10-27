@@ -28,6 +28,12 @@ public class EnemyHealth : MonoBehaviour
     [SerializeField] float _knockbackAcceleration = 20f;
     // Knockback time
     [SerializeField] float _knockbackTime = 0.3f;
+
+    [Header("Feedback")]
+    [SerializeField] AudioClip _deadFX = null;
+    [SerializeField] AudioClip _hurtFX = null;
+    AudioSource _audioSource = null;
+
     // Knockback boolean
     private bool _knockback;
     // Knockback direction
@@ -73,6 +79,7 @@ public class EnemyHealth : MonoBehaviour
 
         if (_health == 0)
         {
+            PlayDeadFX();
             _scoreManager.IncreaseScore(_enemyKilled);
             gameObject.SetActive(false);
             _health = _defaultHealth;
@@ -80,6 +87,7 @@ public class EnemyHealth : MonoBehaviour
         else
         {
             _scoreManager.IncreaseScore(_enemyInjured);
+            PlayDamageFX();
         }
     }
 
@@ -107,5 +115,23 @@ public class EnemyHealth : MonoBehaviour
         _agent.velocity = _kbDirection * 0;
         _agent.speed = _defaultSpeed;
         _agent.acceleration = _defaultAcceleration;
+    }
+
+    public void PlayDamageFX()
+    {
+        // play sfx
+        if (_audioSource != null && _hurtFX != null)
+        {
+            _audioSource.PlayOneShot(_deadFX, _audioSource.volume);
+        }
+    }
+
+    public void PlayDeadFX()
+    {
+        // play sfx
+        if (_audioSource != null && _deadFX != null)
+        {
+            _audioSource.PlayOneShot(_deadFX, _audioSource.volume);
+        }
     }
 }

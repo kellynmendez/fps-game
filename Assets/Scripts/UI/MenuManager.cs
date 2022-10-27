@@ -33,6 +33,16 @@ public class MenuManager : MonoBehaviour
             // Freeze the screen
             Time.timeScale = 0;
         }
+
+        if (_playerIsDead && !_pause)
+        {
+            Time.timeScale = 0;
+        }
+
+        if (!_playerIsDead && !_pause)
+        {
+            Time.timeScale = 1;
+        }
     }
 
     public void ResumeGame()

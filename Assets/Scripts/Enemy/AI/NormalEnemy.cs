@@ -20,6 +20,8 @@ public class NormalEnemy : MonoBehaviour
     [SerializeField] float _velocity = 25f;
     // Bullet pooling object
     [SerializeField] BulletPool _bulletPool;
+    // Barrel transform
+    [SerializeField] Transform _barrel;
     #endregion
 
     #region private variables
@@ -48,6 +50,8 @@ public class NormalEnemy : MonoBehaviour
     bool _enemyHit = false;
     // Unwalkable colliders
     private Collider[] _unwalkableColliders;
+    // y offset from player position to target
+    private float _offsetY = 5f;
     #endregion
 
     public enum EnemyState
@@ -104,6 +108,7 @@ public class NormalEnemy : MonoBehaviour
         else
         {
             _agent.SetDestination(_target.position);
+            LookAtPlayer();
         }
     }
 
@@ -169,6 +174,7 @@ public class NormalEnemy : MonoBehaviour
         // If enemy is in shooting range
         if (_agent.isStopped && distanceAway < _stopDistance && !_enemyHit)
         {
+            LookAtPlayer();
             if (Time.time >= _shootTimeStamp + _shootInterval)
             {
                 StartCoroutine(ShootAtPlayer());
@@ -179,6 +185,7 @@ public class NormalEnemy : MonoBehaviour
         // If enemy is moving and has reached range from player
         if (!_agent.isStopped && distanceAway < _stopDistance)
         {
+            LookAtPlayer();
             // Stop the enemy
             _agent.isStopped = true;
         }
@@ -188,6 +195,15 @@ public class NormalEnemy : MonoBehaviour
             // Let the enemy move
             _agent.isStopped = false;
         }
+    }
+
+    private void LookAtPlayer()
+    {
+        transform.LookAt(_target.position);
+        Vector3 tar = _target.position;
+        tar.y += _offsetY;
+        _barrel.transform.LookAt(tar);
+        _barrel.transform.Rotate(90, 0, 0, Space.Self);
     }
 
     private IEnumerator Wait()
@@ -203,7 +219,7 @@ public class NormalEnemy : MonoBehaviour
     {
         // Wait for look time
         yield return new WaitForSeconds(0.5f);
-        transform.LookAt(_target.position);
+        LookAtPlayer();
         // Getting bullet form pool
         GameObject poolGO = _bulletPool.GetPooledObject();
         // Shoot bullet at player
@@ -213,9 +229,6 @@ public class NormalEnemy : MonoBehaviour
             Rigidbody rb = poolGO.GetComponent<Rigidbody>();
             if (rb)
             {
-                Vector3 tar = _target.position;
-                tar.y += 5;
-                poolGO.transform.LookAt(tar);
                 rb.velocity = poolGO.transform.forward * _velocity;
             }
         }
