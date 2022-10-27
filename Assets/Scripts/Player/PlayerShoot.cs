@@ -34,7 +34,6 @@ public class PlayerShoot : MonoBehaviour
 
         if (Physics.Raycast(_cameraController.transform.position, rayDirection, out rayHitInfo, _rayDistance, _hitLayer))
         {
-            Debug.Log("<color=green>HIT:</color> You hit the enemy.");
             EnemyHealth enemy = rayHitInfo.transform.gameObject.GetComponent<EnemyHealth>();
             if (enemy)
             {
@@ -43,10 +42,6 @@ public class PlayerShoot : MonoBehaviour
             }
             
 
-        }
-        else
-        {
-            Debug.Log("<color=red>MISS:</color> You missed.");
         }
 
         if (debugRay)

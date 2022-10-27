@@ -11,9 +11,9 @@ GameObject:
   - component: {fileID: 5208057437771452367}
   - component: {fileID: 5208057437771452365}
   m_Layer: 0
-  m_Name: CollectSpawner
+  m_Name: PowerupSpawner
   m_TagString: Untagged
-  m_Icon: {fileID: 5721338939258241955, guid: 0000000000000000d000000000000000, type: 0}
+  m_Icon: {fileID: -1412012063857583412, guid: 0000000000000000d000000000000000, type: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
   m_IsActive: 1
@@ -44,5 +44,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5ded148061f69f54f81a87aa9d940cb9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _poolObject: {fileID: 5126083630867078647, guid: c059d2dc16c6a6b47acdcfd8763c769c, type: 3}
-  _respawnTime: 15
+  _poolObject: {fileID: 5126083630867078647, guid: 1e9e382c923a6b54a94147bfd15cd074, type: 3}
+  _respawnTime: 30

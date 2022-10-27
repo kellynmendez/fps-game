@@ -174,8 +174,9 @@ public class NormalEnemy : MonoBehaviour
         // If enemy is in shooting range
         if (_agent.isStopped && distanceAway < _stopDistance && !_enemyHit)
         {
+            _enemyHit = _enemyHealth.WasEnemyHit();
             LookAtPlayer();
-            if (Time.time >= _shootTimeStamp + _shootInterval)
+            if (Time.time >= _shootTimeStamp + _shootInterval && !_enemyHit)
             {
                 StartCoroutine(ShootAtPlayer());
                 _shootTimeStamp = Time.time;

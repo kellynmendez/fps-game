@@ -29,9 +29,13 @@ public class EnemyHealth : MonoBehaviour
     // Knockback time
     [SerializeField] float _knockbackTime = 0.3f;
 
+    [Header("Setup")]
+    [SerializeField] GameObject _visualsToDeactivate = null;
+
     [Header("Feedback")]
-    [SerializeField] AudioClip _deadFX = null;
     [SerializeField] AudioClip _hurtFX = null;
+    [SerializeField] AudioClip _deadFX = null;
+    [SerializeField] ParticleSystem _deadParticle = null;
     AudioSource _audioSource = null;
 
     // Knockback boolean
@@ -79,9 +83,11 @@ public class EnemyHealth : MonoBehaviour
 
         if (_health == 0)
         {
+            _knockback = true;
+            StartCoroutine(WaitForParticlesToDie());
+            _visualsToDeactivate.SetActive(false);
             PlayDeadFX();
             _scoreManager.IncreaseScore(_enemyKilled);
-            gameObject.SetActive(false);
             _health = _defaultHealth;
         }
         else
@@ -117,6 +123,13 @@ public class EnemyHealth : MonoBehaviour
         _agent.acceleration = _defaultAcceleration;
     }
 
+    IEnumerator WaitForParticlesToDie()
+    {
+        yield return new WaitForSeconds(0.5f);
+        gameObject.SetActive(false);
+        _visualsToDeactivate.SetActive(true);
+    }
+
     public void PlayDamageFX()
     {
         // play sfx
@@ -128,6 +141,12 @@ public class EnemyHealth : MonoBehaviour
 
     public void PlayDeadFX()
     {
+        Debug.Log("playing enemy dead fx");
+        // play gfx
+        if (_deadParticle != null)
+        {
+            _deadParticle.Play();
+        }
         // play sfx
         if (_audioSource != null && _deadFX != null)
         {

@@ -12,21 +12,40 @@ public class PickupPool : MonoBehaviour
     private GameObject _currPickup;
     // Collectible object
     Collectible _collectible;
+    // Pickup object
+    InvinciblePowerup _powerUp;
     // respawning?
     bool _respawning = false;
+    // collectible or pickup?
+    bool col = true;
 
-    void Start()
+    void Awake()
     {
         _currPickup = Instantiate(_poolObject);
         _currPickup.transform.position = transform.position;
         _collectible = _currPickup.GetComponent<Collectible>();
+        if (!_collectible)
+        {
+            _powerUp = _currPickup.GetComponent<InvinciblePowerup>();
+            col = false;
+        }
     }
 
     private void Update()
     {
-        if (!_collectible.IsActive() && !_respawning)
+        if (col)
         {
-            StartCoroutine(SpawnPickup());
+            if (!_collectible.IsActive() && !_respawning)
+            {
+                StartCoroutine(SpawnPickup());
+            }
+        }
+        else
+        {
+            if (!_powerUp.IsActive() && !_respawning)
+            {
+                StartCoroutine(SpawnPickup());
+            }
         }
     }
 
@@ -34,7 +53,14 @@ public class PickupPool : MonoBehaviour
     {
         _respawning = true;
         yield return new WaitForSeconds(_respawnTime);
-        _collectible.Reactivate();
+        if (col)
+        {
+            _collectible.Reactivate();
+        }
+        else
+        {
+            _powerUp.Reactivate();
+        }
         _respawning = false;
     }
 }

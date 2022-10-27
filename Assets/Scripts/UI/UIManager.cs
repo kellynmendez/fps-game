@@ -8,6 +8,7 @@ public class UIManager : MonoBehaviour
     [SerializeField] Slider _healthSlider;
     [SerializeField] GameObject _pausePanel;
     [SerializeField] GameObject _deadPromptPanel;
+    [Header("Damage Graphic")]
     [SerializeField] MaskableGraphic _graphic = null;
     [SerializeField] float _fadeInTime = 0.2f;
     [SerializeField] float _fadeOutTime = 0.2f;
@@ -112,5 +113,10 @@ public class UIManager : MonoBehaviour
     public bool IsPlayerDead()
     {
         return _playerDead;
+    }
+
+    public MaskableGraphic GetMaskableGraphic()
+    {
+        return _graphic;
     }
 }

@@ -34,7 +34,6 @@ public class Collectible : MonoBehaviour
     {
         if (other.tag == "Player")
         {
-            Debug.Log("collectible!");
             _scoreManager.IncreaseScore(_scoreIncr);
             // Disabling everything
             _triggerToDisable.enabled = false;
@@ -67,7 +66,6 @@ public class Collectible : MonoBehaviour
         // play sfx
         if (_audioSource != null && _collectibleSFX != null)
         {
-            Debug.Log("sound");
             _audioSource.PlayOneShot(_collectibleSFX, _audioSource.volume);
         }
     }
