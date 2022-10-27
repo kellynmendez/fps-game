@@ -21,5 +21,6 @@ public class PlayerHealth : MonoBehaviour
     public void DamagePlayer(int damageAmount)
     {
         _uiManager.DecreaseHealth(damageAmount);
+
     }
 }

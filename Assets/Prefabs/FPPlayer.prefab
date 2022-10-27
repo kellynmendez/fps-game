@@ -270,7 +270,7 @@ MonoBehaviour:
   _sprintSpeed: 20
   gravity: -19.62
   _groundDistance: 0.4
-  _jumpHeight: 3
+  _jumpHeight: 5
   _groundMask:
     serializedVersion: 2
     m_Bits: 64
