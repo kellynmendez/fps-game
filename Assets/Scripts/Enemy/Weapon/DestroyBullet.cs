@@ -37,8 +37,8 @@ public class DestroyBullet : MonoBehaviour
             gameObject.transform.localScale = gameObject.transform.localScale * _scaleAmount;
             yield return new WaitForSeconds(0.1f); // scale consistently across any machine
         }
-        Debug.Log("set bullet inactive 1");
         gameObject.transform.localScale = _startScale;
+        Debug.Log("set inactive");
         gameObject.SetActive(false);
         yield break;
     }
@@ -47,7 +47,6 @@ public class DestroyBullet : MonoBehaviour
     {
         if (other.tag != "EnemyBody")
         {
-            Debug.Log("set bullet inactive + " + other.gameObject.name);
             gameObject.transform.localScale = _startScale;
             gameObject.SetActive(false);
             // TODO add FX
@@ -55,7 +54,6 @@ public class DestroyBullet : MonoBehaviour
             // If this is the player, decrease player health
             if (other.tag == "Player")
             {
-                Debug.Log("Player health decrease by " + _damageAmount);
                 _playerHealth.DamagePlayer(_damageAmount);
             }
         }

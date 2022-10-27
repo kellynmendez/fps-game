@@ -352,6 +352,19 @@ MonoBehaviour:
   _waitRoamTime: 3
   _velocity: 25
   _bulletPool: {fileID: 5597363678267448788}
+  unwalkableColliders:
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
+  - {fileID: 0}
 --- !u!114 &3809815780733386151
 MonoBehaviour:
   m_ObjectHideFlags: 0

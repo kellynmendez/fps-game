@@ -51,20 +51,28 @@ public class LargeEnemy : MonoBehaviour
         // Chase player
         _agent.SetDestination(_target.position);
         transform.LookAt(_target.position);
-        //_barrel.LookAt(_target.position);
+        Vector3 tar = _target.position;
+        tar.y += 5;
+        _barrel.transform.LookAt(tar);
+        _barrel.transform.Rotate(90, 0, 0, Space.Self);
 
         float distanceAway = Vector3.Distance(transform.position, _target.position);
         // If enemy is moving and has reached range from player
-        if (!_agent.isStopped && distanceAway < _stopDistance)
+        if (_agent.isStopped && distanceAway < _stopDistance)
         {
-            // Stop the enemy
-            _agent.isStopped = true;
             // Shoot at player
             if (Time.time >= _shootTimeStamp + _shootInterval)
             {
                 StartCoroutine(ShootAtPlayer());
                 _shootTimeStamp = Time.time;
             }
+        }
+
+        // If enemy is moving and has reached range from player
+        if (!_agent.isStopped && distanceAway < _stopDistance)
+        {
+            // Stop the enemy
+            _agent.isStopped = true;
         }
         // If the enemy has stopped but the player has moved
         else if (_agent.isStopped && distanceAway > _stopDistance)
@@ -88,6 +96,9 @@ public class LargeEnemy : MonoBehaviour
             Rigidbody rb = poolGO.GetComponent<Rigidbody>();
             if (rb)
             {
+                Vector3 tar = _target.position;
+                tar.y += 5;
+                poolGO.transform.LookAt(tar);
                 rb.velocity = poolGO.transform.forward * _velocity;
             }
         }

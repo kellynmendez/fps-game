@@ -46,6 +46,8 @@ public class NormalEnemy : MonoBehaviour
     bool _isWaiting = false;
     // enemy has been hit
     bool _enemyHit = false;
+    // Unwalkable colliders
+    private Collider[] _unwalkableColliders;
     #endregion
 
     public enum EnemyState
@@ -60,6 +62,8 @@ public class NormalEnemy : MonoBehaviour
         _agent = GetComponent<NavMeshAgent>();
         _enemyHealth = GetComponent<EnemyHealth>();
         _state = EnemyState.Roam;
+
+        _unwalkableColliders = FindObjectOfType<UnwalkableColliders>().GetUnwalkableColliders();
     }
 
     private void Start()
@@ -105,20 +109,43 @@ public class NormalEnemy : MonoBehaviour
 
     private Vector3 RandomPosition()
     {
-        // set random destination
+        bool foundPos = false;
         Vector3 randPos = new Vector3(
-            transform.position.x + Random.Range(-_randPosRange, _randPosRange), 
-            0,
-            transform.position.z + Random.Range(-_randPosRange, _randPosRange));
-        // Make sure random position is not out of bounds of plane
-        if (randPos.x > _planeX)
-            randPos.x = _planeX;
-        else if (randPos.x < -_planeX)
-            randPos.x = -_planeX;
-        if (randPos.z > _planeZ)
-            randPos.z = _planeZ;
-        else if (randPos.z < -_planeZ)
-            randPos.z = -_planeZ;
+                transform.position.x + Random.Range(-_randPosRange, _randPosRange),
+                0,
+                transform.position.z + Random.Range(-_randPosRange, _randPosRange));
+        while (!foundPos)
+        {
+            // set random destination
+            randPos = new Vector3(
+                transform.position.x + Random.Range(-_randPosRange, _randPosRange), 
+                0,
+                transform.position.z + Random.Range(-_randPosRange, _randPosRange));
+            // Make sure random position is not out of bounds of plane
+            if (randPos.x > _planeX)
+                randPos.x = _planeX;
+            else if (randPos.x < -_planeX)
+                randPos.x = -_planeX;
+            if (randPos.z > _planeZ)
+                randPos.z = _planeZ;
+            else if (randPos.z < -_planeZ)
+                randPos.z = -_planeZ;
+
+            bool tryAgain = false;
+            for (int i = 0; i < _unwalkableColliders.Length && !tryAgain; i++)
+            {
+                if (_unwalkableColliders[i].bounds.Contains(randPos))
+                {
+                    tryAgain = true;
+                }
+            }
+
+            if (!tryAgain)
+            {
+                foundPos = true;
+            }
+        }
+        
         return randPos;
     }
 
@@ -139,7 +166,7 @@ public class NormalEnemy : MonoBehaviour
             _roamReached = false;
         }
 
-        // If ebemy is in shooting range
+        // If enemy is in shooting range
         if (_agent.isStopped && distanceAway < _stopDistance && !_enemyHit)
         {
             if (Time.time >= _shootTimeStamp + _shootInterval)
@@ -186,7 +213,9 @@ public class NormalEnemy : MonoBehaviour
             Rigidbody rb = poolGO.GetComponent<Rigidbody>();
             if (rb)
             {
-                poolGO.transform.LookAt(_target.position);
+                Vector3 tar = _target.position;
+                tar.y += 5;
+                poolGO.transform.LookAt(tar);
                 rb.velocity = poolGO.transform.forward * _velocity;
             }
         }
