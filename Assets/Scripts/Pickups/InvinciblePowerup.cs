@@ -65,6 +65,13 @@ public class InvinciblePowerup : MonoBehaviour
         _active = true;
     }
 
+    public void Deactivate()
+    {
+        _triggerToDisable.enabled = false;
+        _artToDisable.SetActive(false);
+        _active = false;
+    }
+
     IEnumerator InvincibleSequence(PlayerHealth player)
     {
         player.SetIsInvincible(true);

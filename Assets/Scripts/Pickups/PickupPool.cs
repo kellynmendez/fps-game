@@ -8,6 +8,8 @@ public class PickupPool : MonoBehaviour
     [SerializeField] GameObject _poolObject;
     // Respawn time
     [SerializeField] float _respawnTime = 15f;
+    // Respawn time
+    [SerializeField] float _spawnDelay = 20f;
     // current pickup
     private GameObject _currPickup;
     // Collectible object
@@ -27,6 +29,8 @@ public class PickupPool : MonoBehaviour
         if (!_collectible)
         {
             _powerUp = _currPickup.GetComponent<InvinciblePowerup>();
+            _powerUp.Deactivate();
+            StartCoroutine(WaitForSpawn());
             col = false;
         }
     }
@@ -61,6 +65,14 @@ public class PickupPool : MonoBehaviour
         {
             _powerUp.Reactivate();
         }
+        _respawning = false;
+    }
+
+    IEnumerator WaitForSpawn()
+    {
+        _respawning = true;
+        yield return new WaitForSeconds(_spawnDelay);
+        _powerUp.Reactivate();
         _respawning = false;
     }
 }

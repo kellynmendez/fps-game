@@ -45,4 +45,5 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   _poolObject: {fileID: 5126083630867078647, guid: 1e9e382c923a6b54a94147bfd15cd074, type: 3}
-  _respawnTime: 30
+  _respawnTime: 40
+  _spwanDelay: 20

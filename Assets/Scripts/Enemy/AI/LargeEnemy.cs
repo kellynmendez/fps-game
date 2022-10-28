@@ -26,7 +26,7 @@ public class LargeEnemy : MonoBehaviour
     // Timer for shooting player
     private float _shootTimeStamp = 0f;
     // how often do we want to shoot
-    private float _shootInterval = 1f;
+    [SerializeField] float _shootInterval = 1f;
     // y offset from player position to target
     private float _offsetY = 5f;
     #endregion

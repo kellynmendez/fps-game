@@ -46,5 +46,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   _poolObject: {fileID: 3850189024372694464, guid: 5cefbd616e9a7ec459e225673dca6383, type: 3}
   _poolSize: 5
-  _spawnTime: 1
+  _spawnTime: 30
   _spawnDelay: 60

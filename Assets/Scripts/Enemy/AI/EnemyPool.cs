@@ -21,8 +21,7 @@ public class EnemyPool : MonoBehaviour
         {
             // Instantiate object and set it to inactive
             GameObject newObj = Instantiate(_poolObject);
-            newObj.transform.position = transform.position;
-            newObj.transform.rotation = transform.rotation;
+            newObj.transform.SetPositionAndRotation(transform.position, transform.rotation);
             newObj.SetActive(false);
             // Add it to the pool
             _gameObjects.Add(newObj);
