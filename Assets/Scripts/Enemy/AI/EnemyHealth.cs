@@ -10,8 +10,11 @@ public class EnemyHealth : MonoBehaviour
     private float _health;
     // Enemy navmesh
     private NavMeshAgent _agent;
+
+    [Header("Health")]
     // Starting default health
-    [SerializeField] float _defaultHealth = 3f;
+    [SerializeField] float _maxHealth = 3f;
+    [SerializeField] EnemyUI _enemyUI;
 
     [Header("Player Score Decrements")]
     // Score increase for injuring enemy
@@ -52,7 +55,8 @@ public class EnemyHealth : MonoBehaviour
     {
         _scoreManager = FindObjectOfType<ScoreManager>();
         _agent = GetComponent<NavMeshAgent>();
-        _health = _defaultHealth;
+        _audioSource = GetComponent<AudioSource>();
+        _health = _maxHealth;
         _knockback = false;
     }
 
@@ -79,6 +83,8 @@ public class EnemyHealth : MonoBehaviour
     public void TakeDamage(float damageAmount)
     {
         _health -= damageAmount;
+        _enemyUI?.SetHealthBar(_health);
+
         Debug.Log("take damage enemy");
 
         if (_health == 0)
@@ -88,7 +94,7 @@ public class EnemyHealth : MonoBehaviour
             _visualsToDeactivate.SetActive(false);
             PlayDeadFX();
             _scoreManager.IncreaseScore(_enemyKilled);
-            _health = _defaultHealth;
+            _health = _maxHealth;
         }
         else
         {
@@ -128,6 +134,7 @@ public class EnemyHealth : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         gameObject.SetActive(false);
         _visualsToDeactivate.SetActive(true);
+        _enemyUI?.SetHealthBar(_maxHealth);
     }
 
     public void PlayDamageFX()
@@ -135,7 +142,7 @@ public class EnemyHealth : MonoBehaviour
         // play sfx
         if (_audioSource != null && _hurtFX != null)
         {
-            _audioSource.PlayOneShot(_deadFX, _audioSource.volume);
+            _audioSource.PlayOneShot(_hurtFX, _audioSource.volume);
         }
     }
 
