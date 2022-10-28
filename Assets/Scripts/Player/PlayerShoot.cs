@@ -11,13 +11,18 @@ public class PlayerShoot : MonoBehaviour
     [SerializeField] float _rayDuration = 2f;
 
     private float _weaponDamage = 1f;
+    private bool _rocketMode = true;
 
     // Update is called once per frame
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Mouse0))
+        if (Input.GetKeyDown(KeyCode.Mouse0) && !_rocketMode)
         {
             ShootRay(true);
+        }
+        else if (Input.GetKeyDown(KeyCode.Mouse0) && _rocketMode)
+        {
+            LaunchRocket(true);
         }
     }
 
@@ -42,6 +47,26 @@ public class PlayerShoot : MonoBehaviour
             }
             
 
+        }
+
+        if (debugRay)
+        {
+            DebugRay(_cameraController.transform.position, rayDirection * _rayDistance);
+        }
+    }
+
+    private void LaunchRocket(bool debugRay)
+    {
+        RaycastHit rayHitInfo;
+        Vector3 rayDirection = _cameraController.transform.forward;
+
+        if (Physics.Raycast(_cameraController.transform.position, rayDirection, out rayHitInfo, _rayDistance, _hitLayer))
+        {
+            EnemyHealth enemy = rayHitInfo.transform.gameObject.GetComponent<EnemyHealth>();
+            if (enemy)
+            {
+                enemy.RocketChainKill();
+            }
         }
 
         if (debugRay)

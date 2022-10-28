@@ -9,18 +9,11 @@ public class InvinciblePowerup : MonoBehaviour
     [SerializeField] GameObject _artToDisable = null;
     [SerializeField] float _invincibleTime = 6f;
 
-    [Header("Score")]
-    [SerializeField] int _scoreIncr = 20;
-
     [Header("Feedback")]
     [SerializeField] AudioClip _collectibleSFX = null;
     [SerializeField] ParticleSystem _collectibleParticle = null;
     
-    [Header("Invincible Graphic")]
-    [SerializeField] float _fadeInTime = 0.2f;
-    [SerializeField] float _fadeOutTime = 0.2f;
     private MaskableGraphic _graphic = null;
-
     AudioSource _audioSource = null;
     bool _active = true;
     Color _oldColor;

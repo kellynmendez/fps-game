@@ -38,7 +38,6 @@ public class DestroyBullet : MonoBehaviour
             yield return new WaitForSeconds(0.1f); // scale consistently across any machine
         }
         gameObject.transform.localScale = _startScale;
-        Debug.Log("set inactive");
         gameObject.SetActive(false);
         yield break;
     }

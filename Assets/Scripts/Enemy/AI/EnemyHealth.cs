@@ -34,11 +34,13 @@ public class EnemyHealth : MonoBehaviour
 
     [Header("Setup")]
     [SerializeField] GameObject _visualsToDeactivate = null;
+    [SerializeField] Collider _colliderToDeactivate = null;
 
     [Header("Feedback")]
     [SerializeField] AudioClip _hurtFX = null;
     [SerializeField] AudioClip _deadFX = null;
     [SerializeField] ParticleSystem _deadParticle = null;
+    [SerializeField] ParticleSystem _rocketParticle = null;
     AudioSource _audioSource = null;
 
     // Knockback boolean
@@ -92,6 +94,7 @@ public class EnemyHealth : MonoBehaviour
             _knockback = true;
             StartCoroutine(WaitForParticlesToDie());
             _visualsToDeactivate.SetActive(false);
+            _colliderToDeactivate.enabled = false;
             PlayDeadFX();
             _scoreManager.IncreaseScore(_enemyKilled);
             _health = _maxHealth;
@@ -101,6 +104,17 @@ public class EnemyHealth : MonoBehaviour
             _scoreManager.IncreaseScore(_enemyInjured);
             PlayDamageFX();
         }
+    }
+
+    public void RocketChainKill()
+    {
+        _knockback = true;
+        StartCoroutine(WaitForParticlesToDie());
+        _visualsToDeactivate.SetActive(false);
+        _colliderToDeactivate.enabled = false;
+        PlayRocketDeadFX();
+        _scoreManager.IncreaseScore(_enemyKilled);
+        _health = _maxHealth;
     }
 
     public void EnemyKnockback(Vector3 direction)
@@ -134,6 +148,7 @@ public class EnemyHealth : MonoBehaviour
         yield return new WaitForSeconds(0.5f);
         gameObject.SetActive(false);
         _visualsToDeactivate.SetActive(true);
+        _colliderToDeactivate.enabled = true;
         _enemyUI?.SetHealthBar(_maxHealth);
     }
 
@@ -148,11 +163,24 @@ public class EnemyHealth : MonoBehaviour
 
     public void PlayDeadFX()
     {
-        Debug.Log("playing enemy dead fx");
         // play gfx
         if (_deadParticle != null)
         {
             _deadParticle.Play();
+        }
+        // play sfx
+        if (_audioSource != null && _deadFX != null)
+        {
+            _audioSource.PlayOneShot(_deadFX, _audioSource.volume);
+        }
+    }
+
+    public void PlayRocketDeadFX()
+    {
+        // play gfx
+        if (_rocketParticle != null)
+        {
+            _rocketParticle.Play();
         }
         // play sfx
         if (_audioSource != null && _deadFX != null)

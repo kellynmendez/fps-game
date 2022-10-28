@@ -38,7 +38,6 @@ public class UIManager : MonoBehaviour
     public void DecreaseHealth(int healthDecr)
     {
         _healthSlider.value -= healthDecr;
-        Debug.Log("player health is " + _healthSlider.value);
         if (_healthSlider.value == 0 && !_playerDead)
         {
             _playerDead = true;
