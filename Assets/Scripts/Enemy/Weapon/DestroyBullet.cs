@@ -48,8 +48,6 @@ public class DestroyBullet : MonoBehaviour
         {
             gameObject.transform.localScale = _startScale;
             gameObject.SetActive(false);
-            // TODO add FX
-
             // If this is the player, decrease player health
             if (other.tag == "Player")
             {
@@ -57,5 +55,11 @@ public class DestroyBullet : MonoBehaviour
             }
         }
         
+    }
+
+    public void RocketKillBullet()
+    {
+        gameObject.transform.localScale = _startScale;
+        gameObject.SetActive(false);
     }
 }

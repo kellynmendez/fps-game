@@ -623,6 +623,7 @@ MonoBehaviour:
   _velocity: 25
   _bulletPool: {fileID: 5597363678267448788}
   _barrel: {fileID: 8947392910382135248}
+  _shootFX: {fileID: 8300000, guid: 5484215eb282a8c498e76d7433af344a, type: 3}
 --- !u!114 &3809815780733386151
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -4701,7 +4702,7 @@ ParticleSystem:
     radiusScale: 1
     collidesWith:
       serializedVersion: 2
-      m_Bits: 128
+      m_Bits: 384
     maxCollisionShapes: 256
     quality: 0
     voxelSize: 0.5
@@ -5740,7 +5741,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 29b435d93eaef6f4f84eaf351d564416, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  _particles: {fileID: 4560145348491868107}
 --- !u!1 &5053400700778824283
 GameObject:
   m_ObjectHideFlags: 0

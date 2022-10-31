@@ -16,6 +16,8 @@ public class LargeEnemy : MonoBehaviour
     [SerializeField] BulletPool _bulletPool;
     // Barrel transform
     [SerializeField] Transform _barrel;
+    [Header("Feedback")]
+    [SerializeField] AudioClip _shootFX = null;
     #endregion
 
     #region private variables
@@ -29,6 +31,8 @@ public class LargeEnemy : MonoBehaviour
     [SerializeField] float _shootInterval = 1f;
     // y offset from player position to target
     private float _offsetY = 5f;
+    // audio source
+    AudioSource _audioSource;
     #endregion
 
     public enum EnemyState
@@ -39,6 +43,7 @@ public class LargeEnemy : MonoBehaviour
 
     private void Awake()
     {
+        _audioSource = GetComponent<AudioSource>();
         _target = FindObjectOfType<PlayerMovement>().transform;
         _agent = GetComponent<NavMeshAgent>();
     }
@@ -98,11 +103,21 @@ public class LargeEnemy : MonoBehaviour
             Rigidbody rb = poolGO.GetComponent<Rigidbody>();
             if (rb)
             {
+                PlayShootFX();
                 Vector3 tar = _target.position;
                 tar.y += _offsetY;
                 poolGO.transform.LookAt(tar);
                 rb.velocity = poolGO.transform.forward * _velocity;
             }
+        }
+    }
+
+    public void PlayShootFX()
+    {
+        // play sfx
+        if (_audioSource != null && _shootFX != null)
+        {
+            _audioSource.PlayOneShot(_shootFX, _audioSource.volume);
         }
     }
 }

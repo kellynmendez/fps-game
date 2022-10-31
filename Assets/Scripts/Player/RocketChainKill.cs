@@ -19,9 +19,11 @@ public class RocketChainKill : MonoBehaviour
 
         for (int i = 0; i < numCollisionEvents; i++)
         {
-            Debug.Log("enemy hit by particle");
             EnemyHealth enemy = _collisionEvents[i].colliderComponent.gameObject.GetComponent<EnemyHealth>();
             enemy?.RocketChainKill();
+
+            DestroyBullet bullet = _collisionEvents[i].colliderComponent.gameObject.GetComponent<DestroyBullet>();
+            bullet.RocketKillBullet();
         }
     }
 }

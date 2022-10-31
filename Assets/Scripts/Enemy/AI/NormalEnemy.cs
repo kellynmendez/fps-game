@@ -15,6 +15,7 @@ public class NormalEnemy : MonoBehaviour
     [SerializeField] float _stopDistance = 30f;
     // How much time enemy waits before changing direcitons in roam
     [SerializeField] float _waitRoamTime = 3f;
+
     [Header("Bullets")]
     // Velocity of bullet
     [SerializeField] float _velocity = 25f;
@@ -22,6 +23,9 @@ public class NormalEnemy : MonoBehaviour
     [SerializeField] BulletPool _bulletPool;
     // Barrel transform
     [SerializeField] Transform _barrel;
+    
+    [Header("Feedback")]
+    [SerializeField] AudioClip _shootFX = null;
     #endregion
 
     #region private variables
@@ -52,6 +56,8 @@ public class NormalEnemy : MonoBehaviour
     private Collider[] _unwalkableColliders;
     // y offset from player position to target
     private float _offsetY = 5f;
+    // audio source
+    AudioSource _audioSource;
     #endregion
 
     public enum EnemyState
@@ -62,6 +68,7 @@ public class NormalEnemy : MonoBehaviour
 
     private void Awake()
     {
+        _audioSource = GetComponent<AudioSource>();
         _target = FindObjectOfType<PlayerMovement>().transform;
         _agent = GetComponent<NavMeshAgent>();
         _enemyHealth = GetComponent<EnemyHealth>();
@@ -226,12 +233,22 @@ public class NormalEnemy : MonoBehaviour
         // Shoot bullet at player
         if (poolGO)
         {
+            PlayShootFX();
             // Got an object from the pooling system, can use it
             Rigidbody rb = poolGO.GetComponent<Rigidbody>();
             if (rb)
             {
                 rb.velocity = poolGO.transform.forward * _velocity;
             }
+        }
+    }
+
+    public void PlayShootFX()
+    {
+        // play sfx
+        if (_audioSource != null && _shootFX != null)
+        {
+            _audioSource.PlayOneShot(_shootFX, _audioSource.volume);
         }
     }
 }

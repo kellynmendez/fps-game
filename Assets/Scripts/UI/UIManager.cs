@@ -8,6 +8,9 @@ public class UIManager : MonoBehaviour
     [SerializeField] Slider _healthSlider;
     [SerializeField] GameObject _pausePanel;
     [SerializeField] GameObject _deadPromptPanel;
+    [Header("Weapon Visual")]
+    [SerializeField] GameObject _normalCrosshair;
+    [SerializeField] GameObject _rocketCrosshair;
     [Header("Damage Graphic")]
     [SerializeField] MaskableGraphic _graphic = null;
     [SerializeField] float _fadeInTime = 0.2f;
@@ -28,6 +31,8 @@ public class UIManager : MonoBehaviour
         _playerDead = false;
         _oldColor = _graphic.color;
         _startAlpha = _graphic.color.a;
+        _normalCrosshair.SetActive(true);
+        _rocketCrosshair.SetActive(false);
     }
 
     public void SetHealthSliderToMax(int healthMax)
@@ -49,6 +54,27 @@ public class UIManager : MonoBehaviour
         {
             StartCoroutine(PlayDamageFX());
         }
+    }
+
+    public void SetNormalCrosshairActiveState(bool active)
+    {
+        if (!_rocketCrosshair.activeSelf)
+        {
+            _normalCrosshair.SetActive(active);
+        }
+    }
+
+    public void SetRocketCrosshairActiveState(bool active)
+    {
+        if (!_normalCrosshair.activeSelf)
+        {
+            _rocketCrosshair.SetActive(active);
+        }
+    }
+
+    public bool GetRocketCrosshairActiveState()
+    {
+        return _rocketCrosshair.activeSelf;
     }
 
     IEnumerator PlayDamageFX()
@@ -91,7 +117,6 @@ public class UIManager : MonoBehaviour
 
     public void PlayDeadFX()
     {
-        Debug.Log("play dead sound");
         // play sfx
         if (_audioSource != null && _deadFX != null)
         {
